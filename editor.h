@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 
 #define MAXSTRLEN 255
 //#define MAXSTRLEN 5
@@ -14,8 +14,6 @@ typedef PtrToString String;
 typedef PtrToLine Line;
 typedef PtrToText Text;
 typedef PtrToCursor Cursor;
-
-
 
 /**
  * 定义 char 的指针数据类型
@@ -59,14 +57,13 @@ struct TextNode {
     PtrToLine next;
 };
 
-
 /**
  * 定义指针结构体
  */
 struct CursorNode {
     int n;
     int m;
-//    PtrToLine curLine;
+    //    PtrToLine curLine;
 };
 
 String initString() {
@@ -92,7 +89,7 @@ Cursor initCursor() {
     Cursor cursor = (Cursor)malloc(sizeof(struct CursorNode));
     cursor->n = 1;
     cursor->m = 1;
-//    cursor->curLine = NULL;
+    //    cursor->curLine = NULL;
     return cursor;
 }
 
@@ -138,8 +135,7 @@ void insertString(Text text, String string, Cursor cursor);
 void deleteChar(Text text, Cursor cursor);
 void moveCursor(Text text, Cursor cursor, String string);
 void printText(Text text);
-int max(int a, int b) ;
-
+int max(int a, int b);
 
 void readString(String string) {
     char inputChar;
@@ -150,7 +146,8 @@ void readString(String string) {
         string->command[1] = getchar();
         string->command[2] = '\0';
     } else {
-        while (getchar() != '\n');
+        while (getchar() != '\n')
+            ;
         return;
     }
     if (getchar() == '\n') {
@@ -271,7 +268,6 @@ void insertLine(Text text, String string, Cursor cursor) {
     }
 }
 
-
 void deleteLine(Text text, int n, Cursor cursor) {
     Line tempLine;
     if (n == 1) {
@@ -285,6 +281,10 @@ void deleteLine(Text text, int n, Cursor cursor) {
         Line targetLine = findPreLine(text, n);
         tempLine = targetLine->next;
         targetLine->next = tempLine->next;
+        // 删除最后一行
+        if (targetLine->next == NULL) {
+            text->tail = targetLine;
+        }
         free(tempLine);
         if (n == text->lineCnt) {
             cursor->m = 1;
@@ -315,7 +315,7 @@ void deleteCurrentLine(Text text, Cursor cursor) {
  */
 void deletetSetLine(Text text, String string, Cursor cursor) {
     if (string->n > text->lineCnt) {
-        printf("Invalid input!\n");
+        printf("The n is bigger than the number of text's line. Invalid input!\n");
     } else {
         deleteLine(text, string->n, cursor);
         if (string->n <= cursor->n) {
@@ -369,8 +369,6 @@ void insertString(Text text, String string, Cursor cursor) {
         }
         cursor->m += string->textstringLength;
     }
-
-
 }
 
 /**
